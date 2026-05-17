@@ -3,46 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taranova Depo | Kayıt Ol</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Taranova Depo | Güvenli Kayıt</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #0F172A; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .auth-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 24px; padding: 40px; width: 100%; max-width: 450px; box-shadow: 0 20px 40px -10px rgba(37,99,235,0.1); }
-        .brand { font-weight: 800; font-size: 2rem; letter-spacing: -1px; text-align: center; margin-bottom: 30px; }
-        .form-control { padding: 12px 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #E2E8F0; }
-        .btn-glow { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); color: white; font-weight: 800; padding: 12px; border-radius: 12px; width: 100%; border: none; transition: 0.3s; }
-        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); }
-        .alert { display: none; border-radius: 10px; }
+        :root { --corporate-blue: #2563EB; --light-bg: #F8FAFC; }
+        /* SAĞ TIK VE SEÇİM ENGELİ İÇİN */
+        body { background-color: var(--light-bg); font-family: 'Plus Jakarta Sans', sans-serif; user-select: none; }
+        .right-side { max-width: 450px; margin: 60px auto 30px auto; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px -10px rgba(37,99,235,0.1); }
+        .brand { font-weight: 800; font-size: 2rem; letter-spacing: -1px; text-align: center; margin-bottom: 20px; }
+        .btn-corporate { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); color: white; padding: 12px; border-radius: 12px; width: 100%; border: none; font-weight: 800; transition: 0.3s; }
+        .btn-corporate:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); color: white;}
+        #successMessage { display: none; background-color: #d1fae5; color: #065f46; padding: 30px; border-radius: 12px; text-align: center; }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="right-side">
+            <div id="successMessage">
+                <i class="fa-solid fa-envelope-circle-check fa-4x mb-3 text-success"></i>
+                <h3 class="fw-bold" data-tr="Kayıt Başarılı!" data-en="Registration Successful!">Kayıt Başarılı!</h3>
+                <p data-tr="Doğrulama maili adresinize gönderildi. Lütfen gelen kutunuzu (ve gereksiz klasörünü) kontrol edin." data-en="Verification email has been sent. Please check your inbox (and spam folder).">Doğrulama maili adresinize gönderildi. Lütfen gelen kutunuzu (ve gereksiz klasörünü) kontrol edin.</p>
+                <a href="login.html" class="btn btn-success mt-3 px-4 fw-bold" data-tr="Giriş Yapmaya Git" data-en="Go to Login">Giriş Yapmaya Git</a>
+            </div>
 
-    <div class="auth-card">
-        <div class="brand">TARANOVA<span style="color: #2563EB;">DEPO</span></div>
-        <h4 class="fw-bold mb-4 text-center" data-tr="Hesap Oluştur" data-en="Create Account">Hesap Oluştur</h4>
-        
-        <div class="alert alert-danger" id="errorMsg"></div>
-        <div class="alert alert-success" id="successMsg"></div>
+            <div id="formContainer">
+                <div class="text-center mb-4">
+                    <div class="brand">TARANOVA<span style="color: #2563EB;">DEPO</span></div>
+                    <h4 class="fw-bold" data-tr="Hesap Oluştur" data-en="Create Account">Hesap Oluştur</h4>
+                    <p class="text-muted small" data-tr="Yapay Zeka Destekli Depo Yönetimi" data-en="AI-Powered Warehouse Management">Yapay Zeka Destekli Depo Yönetimi</p>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label small fw-bold" data-tr="Ad Soyad" data-en="Full Name">Ad Soyad</label>
+                    <input type="text" id="fullName" class="form-control form-control-lg" placeholder="Ad Soyad / Full Name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold" data-tr="E-posta Adresi" data-en="Email Address">E-posta Adresi</label>
+                    <input type="email" id="email" class="form-control form-control-lg" placeholder="ornek@sirket.com">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold" data-tr="Şifre" data-en="Password">Şifre</label>
+                    <input type="password" id="password" class="form-control form-control-lg" placeholder="••••••">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-bold" data-tr="Şifre Tekrar" data-en="Confirm Password">Şifre Tekrar</label>
+                    <input type="password" id="passwordConfirm" class="form-control form-control-lg" placeholder="••••••">
+                </div>
 
-        <form id="registerForm">
-            <input type="text" id="fullName" class="form-control" placeholder="Ad Soyad / Full Name" required>
-            <input type="email" id="email" class="form-control" placeholder="E-posta / Email" required>
-            <input type="password" id="password" class="form-control" placeholder="Şifre / Password (Min 6 chars)" required>
-            <button type="submit" class="btn-glow mt-2" data-tr="Kayıt Ol" data-en="Sign Up">Kayıt Ol</button>
-        </form>
+                <div class="mb-4 form-check d-flex align-items-center gap-2">
+                    <input type="checkbox" class="form-check-input mt-0" id="termsCheckbox">
+                    <label class="form-check-label small" for="termsCheckbox">
+                        <span data-bs-toggle="modal" data-bs-target="#termsModal" class="text-primary fw-bold" style="cursor: pointer; text-decoration: underline;" data-tr="Kullanım Koşulları ve KVKK Metnini" data-en="Terms of Service and Privacy Policy">Kullanım Koşulları ve KVKK Metnini</span> 
+                        <span data-tr="okudum, onaylıyorum." data-en="I have read and agree.">okudum, onaylıyorum.</span>
+                    </label>
+                </div>
+                
+                <div id="regErrorMessage" class="alert alert-danger d-none mb-3 small fw-bold"></div>
+                <button type="button" id="regBtn" class="btn-corporate btn-lg" data-tr="Kayıt Ol" data-en="Sign Up">Kayıt Ol</button>
+                <p class="text-center mt-4 small text-muted">
+                    <span data-tr="Zaten hesabınız var mı?" data-en="Already have an account?">Zaten hesabınız var mı?</span> 
+                    <a href="login.html" class="fw-bold text-decoration-none" style="color: #2563EB;" data-tr="Giriş Yap" data-en="Login">Giriş Yap</a>
+                </p>
+            </div>
+        </div>
         
-        <p class="text-center mt-4 text-muted">
-            <span data-tr="Zaten hesabınız var mı?" data-en="Already have an account?">Zaten hesabınız var mı?</span> 
-            <a href="login.html" class="fw-bold text-primary text-decoration-none" data-tr="Giriş Yap" data-en="Login">Giriş Yap</a>
-        </p>
+        <div class="text-center mt-4 mb-5" style="border-top: 1px solid #e2e8f0; padding-top: 20px;">
+            <p class="text-muted small mb-1"><b>Taranova Bilişim ve Teknoloji A.Ş.</b></p>
+            <p class="text-muted small mb-1"><i class="fa-solid fa-location-dot"></i> Balgat Mahallesi Ziyabey caddesi no: 75/7 Çankaya / Ankara</p>
+            <p class="text-muted small mb-1"><i class="fa-solid fa-phone"></i> 0536 475 35 80</p>
+            <p class="text-muted small mt-3" style="font-size: 10px;">
+                PAYTR markası PayTR Ödeme ve Elektronik Para Kuruluşu A.Ş.’nin tescilli markasıdır.
+            </p>
+        </div>
     </div>
 
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title fw-bold" data-tr="Yasal Bildirimler ve Sözleşmeler" data-en="Legal Notices and Agreements">Yasal Bildirimler ve Sözleşmeler</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body text-dark" style="font-size: 0.9rem;">
+            
+            <h6 class="fw-bold text-primary border-bottom pb-2" data-tr="1. Kullanıcı Sözleşmesi" data-en="1. User Agreement">1. Kullanıcı Sözleşmesi</h6>
+            <p data-tr="<strong>Taraflar:</strong> İşbu sözleşme, 'Taranova' uygulamasının yasal sahibi olan Okito Yazılım Ticaret Limited Şirketi ile uygulamayı kullanan gerçek veya tüzel kişi arasında akdedilmiştir." data-en="<strong>Parties:</strong> This agreement is concluded between Okito Yazılım Ticaret Limited Şirketi, the legal owner of the 'Taranova' application, and the real or legal person using the application."><strong>Taraflar:</strong> İşbu sözleşme, "Taranova" uygulamasının yasal sahibi olan Okito Yazılım Ticaret Limited Şirketi ile uygulamayı kullanan gerçek veya tüzel kişi arasında akdedilmiştir.</p>
+            <p data-tr="<strong>Hizmetin Tanımı:</strong> Taranova Depo Global, depo lojistik belgelerinin ve irsaliyelerin yapay zeka aracılığıyla dijitalleştirilmesini sağlayan bulut tabanlı bir sistemdir." data-en="<strong>Service Description:</strong> Taranova Depo Global is a cloud-based system that enables the digitization of warehouse logistics documents and waybills via artificial intelligence."><strong>Hizmetin Tanımı:</strong> Taranova Depo Global, depo lojistik belgelerinin ve irsaliyelerin yapay zeka aracılığıyla dijitalleştirilmesini sağlayan bulut tabanlı bir sistemdir.</p>
+            <p data-tr="<strong>Sorumluluk Reddi:</strong> Yapay zeka yüksek doğruluk oranıyla çalışsa da, nihai matematiksel ve lojistik kontrol sorumluluğu tamamen KULLANICI'ya aittir." data-en="<strong>Disclaimer:</strong> Although artificial intelligence works with a high accuracy rate, the ultimate responsibility for mathematical and logistical control belongs entirely to the USER."><strong>Sorumluluk Reddi:</strong> Yapay zeka yüksek doğruluk oranıyla çalışsa da, nihai matematiksel ve lojistik kontrol sorumluluğu tamamen KULLANICI'ya aittir.</p>
+
+            <h6 class="fw-bold text-primary border-bottom pb-2 mt-4" data-tr="2. İptal ve İade Koşulları" data-en="2. Cancellation and Refund Policy">2. İptal ve İade Koşulları</h6>
+            <p data-tr="Taranova bir 'Dijital Tüketim ve Hizmet' ürünüdür. Paket satın alındıktan sonra <strong>ücret iadesi yapılmamaktadır.</strong> Kullanılmayan haklar iptal olur, devretmez." data-en="Taranova is a 'Digital Consumption and Service' product. <strong>No refunds are issued</strong> after a package is purchased. Unused rights are canceled and cannot be transferred.">Taranova bir "Dijital Tüketim ve Hizmet" ürünüdür. Paket satın alındıktan sonra <strong>ücret iadesi yapılmamaktadır.</strong> Kullanılmayan haklar iptal olur, devretmez.</p>
+
+            <h6 class="fw-bold text-primary border-bottom pb-2 mt-4" data-tr="3. KVKK ve Gizlilik Politikası" data-en="3. Privacy Policy & GDPR">3. KVKK ve Gizlilik Politikası</h6>
+            <p data-tr="Yüklenen evraklar yapay zeka motoru tarafından okunup Excel'e dönüştürüldükten hemen sonra <strong>sunucularımızdan kalıcı olarak silinmektedir.</strong> Kayıt aşamasında alınan bilgileriniz şifreli veritabanlarında saklanır." data-en="Uploaded documents are <strong>permanently deleted from our servers</strong> immediately after being read by the AI engine and converted to Excel. Information collected during registration is stored in encrypted databases.">Yüklenen evraklar yapay zeka motoru tarafından okunup Excel'e dönüştürüldükten hemen sonra <strong>sunucularımızdan kalıcı olarak silinmektedir.</strong> Kayıt aşamasında alınan bilgileriniz şifreli veritabanlarında saklanır.</p>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary w-100 fw-bold" data-bs-dismiss="modal" data-tr="Okudum, Onaylıyorum" data-en="I Read and Agree">Okudum, Onaylıyorum</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault()); 
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) return false; // F12
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; // Ctrl+Shift+I
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; // Ctrl+Shift+J
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ctrl+U
+            if(e.ctrlKey && e.keyCode == 'C'.charCodeAt(0)) return false; // Ctrl+C
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
+        // Taranova Depo Global Şifreleri
         const firebaseConfig = {
             apiKey: "AIzaSyAce3zb1TSXfKhhTfcEF1H-B60rtRI0V98",
             authDomain: "taranova-depo-global.firebaseapp.com",
@@ -56,39 +138,61 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Dil Ayarı
+        // Dil Ayarı (Otomatik)
         let currentLang = localStorage.getItem('taranova_lang') || 'tr';
+        auth.languageCode = currentLang; 
         document.querySelectorAll('[data-tr]').forEach(el => el.innerHTML = el.getAttribute('data-' + currentLang));
 
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
+        document.getElementById('regBtn').addEventListener('click', async () => {
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
-            const fullName = document.getElementById('fullName').value;
-            const errBox = document.getElementById('errorMsg');
-            const sucBox = document.getElementById('successMsg');
+            const passwordConfirm = document.getElementById('passwordConfirm').value;
+            const isChecked = document.getElementById('termsCheckbox').checked;
             
-            errBox.style.display = 'none'; sucBox.style.display = 'none';
+            const btn = document.getElementById('regBtn');
+            const errorDiv = document.getElementById('regErrorMessage');
+
+            errorDiv.classList.add('d-none');
+
+            // Hata Kontrolleri
+            if (!fullName) { errorDiv.innerText = currentLang === 'tr' ? "Lütfen adınızı soyadınızı girin." : "Please enter your full name."; errorDiv.classList.remove('d-none'); return; }
+            if (!email) { errorDiv.innerText = currentLang === 'tr' ? "Lütfen E-posta girin." : "Please enter your email."; errorDiv.classList.remove('d-none'); return; }
+            if (password.length < 6) { errorDiv.innerText = currentLang === 'tr' ? "Şifre en az 6 karakter olmalı." : "Password must be at least 6 characters."; errorDiv.classList.remove('d-none'); return; }
+            if (password !== passwordConfirm) { errorDiv.innerText = currentLang === 'tr' ? "Şifreler uyuşmuyor." : "Passwords do not match."; errorDiv.classList.remove('d-none'); return; }
+            if (!isChecked) { errorDiv.innerText = currentLang === 'tr' ? "Lütfen koşulları onaylayın." : "Please agree to the terms."; errorDiv.classList.remove('d-none'); return; }
+
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> İşlem Yapılıyor...';
+            btn.disabled = true;
 
             try {
+                // 1. Kullanıcıyı Oluştur
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
                 
-                // Veritabanına kullanıcıyı Kontör = 0 ile kaydet
+                // 2. Doğrulama Maili Gönder
+                await sendEmailVerification(user);
+
+                // 3. Veritabanına Kaydet (Müşteriye 0 Kontör Tanımla)
                 await setDoc(doc(db, "users", user.uid), {
                     fullName: fullName,
                     email: email,
                     credits: 0,
+                    emailVerified: false,
                     createdAt: new Date().toISOString()
                 });
-
-                sucBox.innerText = currentLang === 'tr' ? "Kayıt Başarılı! Giriş sayfasına yönlendiriliyorsunuz..." : "Registration Successful! Redirecting to login...";
-                sucBox.style.display = 'block';
                 
-                setTimeout(() => { window.location.href = "login.html"; }, 2000);
+                // 4. Oturumu hemen kapat (Maili onaylamadan içeri giremesin)
+                await signOut(auth); 
+                
+                // 5. Şık Başarı Ekranını Göster
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
             } catch (error) {
-                errBox.innerText = error.message;
-                errBox.style.display = 'block';
+                btn.innerHTML = currentLang === 'tr' ? 'Kayıt Ol' : 'Sign Up';
+                btn.disabled = false;
+                errorDiv.innerText = "Hata: " + error.message;
+                errorDiv.classList.remove('d-none');
             }
         });
     </script>

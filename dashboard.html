@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taranova Depo | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --sidebar-bg: #0F172A; --primary: #2563EB; --success: #16a34a; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F8FAFC; display: flex; height: 100vh; overflow: hidden; user-select: none; }
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; z-index: 100; }
+        .main-content { flex: 1; padding: 20px 40px; overflow-y: auto; }
+        .card-custom { background: white; border-radius: 20px; padding: 30px; border: 1px solid #E2E8F0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .sidebar .nav-link { color: #94A3B8; padding: 15px 25px; cursor: pointer; text-decoration: none; display: block; font-weight: 600; border-left: 4px solid transparent; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,0.05); color: white; border-left-color: var(--primary); }
+        .btn-glow { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); color: white; font-weight: 800; border: none; transition: 0.3s; }
+        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); color: white;}
+        #dropzone-area { cursor: pointer; border: 3px dashed #CBD5E1; transition: 0.3s; }
+        #dropzone-area:hover { border-color: var(--primary); background-color: #eff6ff !important; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="p-4 border-bottom border-secondary text-center">
+            <h4 class="mt-2 fw-bold d-inline ms-2 text-white">TARANOVA<span style="color: var(--primary);">DEPO</span></h4>
+        </div>
+        <div class="flex-grow-1 mt-3">
+            <a onclick="showView('scan')" id="nav-scan" class="nav-link active"><i class="fa-solid fa-microchip me-2"></i> <span data-tr="Yapay Zeka Tarama" data-en="AI Scanner">Yapay Zeka Tarama</span></a>
+            <a onclick="showView('wallet')" id="nav-wall" class="nav-link"><i class="fa-solid fa-wallet me-2"></i> <span data-tr="Kredi Yükle" data-en="Buy Credits">Kredi Yükle</span></a>
+            <a onclick="showView('history')" id="nav-hist" class="nav-link"><i class="fa-solid fa-clock-rotate-left me-2"></i> <span data-tr="Geçmiş" data-en="History">Geçmiş</span></a>
+        </div>
+        <div class="p-3">
+            <button id="logoutBtn" class="btn btn-outline-danger w-100 fw-bold"><i class="fa-solid fa-power-off me-2"></i> <span data-tr="Çıkış" data-en="Logout">Çıkış</span></button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold m-0" id="userGreeting">Hoş Geldiniz</h3>
+                <p class="text-muted small m-0" data-tr="Global Depo Yönetim Sistemi" data-en="Global Warehouse Management System">Global Depo Yönetim Sistemi</p>
+            </div>
+            <div class="d-flex gap-3 align-items-center">
+                <span class="badge bg-secondary" style="cursor: pointer;" onclick="toggleLang()" id="langBtn">EN</span>
+                <div class="bg-dark text-white px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-3">
+                    <i class="fa-solid fa-coins fs-3 text-warning"></i>
+                    <div>
+                        <small class="d-block opacity-75" style="font-size: 10px;" data-tr="KALAN KREDİ" data-en="CREDITS LEFT">KALAN KREDİ</small>
+                        <h4 id="creditAmount" class="m-0 fw-bold">...</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="scan-view" class="view-section">
+            <div class="card-custom text-center">
+                <div id="dropzone-area" class="border-5 p-5 rounded-4 bg-light" onclick="document.getElementById('fileInput').click()">
+                    <i class="fa-solid fa-file-invoice display-3 text-primary mb-3"></i>
+                    <h4 class="fw-bold" data-tr="İrsaliyenizi Sürükleyin veya Seçin" data-en="Drag or Select Your Waybill">İrsaliyenizi Sürükleyin veya Seçin</h4>
+                    <p class="text-muted small" data-tr="(Desteklenen formatlar: PDF, JPG, PNG)" data-en="(Supported formats: PDF, JPG, PNG)">(Desteklenen formatlar: PDF, JPG, PNG)</p>
+                    <input type="file" id="fileInput" class="d-none" accept=".pdf, .jpg, .jpeg, .png">
+                </div>
+                <div id="statusMsg" class="mt-4"></div>
+            </div>
+        </div>
+
+        <div id="wallet-view" class="view-section" style="display: none;">
+            <h3 class="fw-bold mb-4" data-tr="Global Kredi Paketleri" data-en="Global Credit Packages">Global Kredi Paketleri</h3>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card-custom text-center" style="cursor: pointer; border: 2px solid #E2E8F0;" onclick="buyCredits(100, 50)">
+                        <h5 class="fw-bold text-muted">100 Scans</h5><hr>
+                        <h2 class="text-dark fw-bold">$50</h2>
+                        <button class="btn btn-dark w-100 mt-3 fw-bold btn-glow" data-tr="Satın Al" data-en="Purchase">Satın Al</button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom text-center" style="cursor: pointer; border: 2px solid var(--primary);" onclick="buyCredits(500, 200)">
+                        <div class="badge bg-primary mb-2">POPULAR</div>
+                        <h5 class="fw-bold text-primary">500 Scans</h5><hr>
+                        <h2 class="text-dark fw-bold">$200</h2>
+                        <button class="btn btn-primary w-100 mt-3 fw-bold btn-glow" data-tr="Satın Al" data-en="Purchase">Satın Al</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="history-view" class="view-section" style="display: none;">
+            <h3 class="fw-bold mb-4" data-tr="Sistem Geçmişi" data-en="System History">Sistem Geçmişi</h3>
+            <div class="card-custom">
+                <p class="text-muted text-center py-4" data-tr="Geçmiş işlemleriniz yakında burada listelenecektir." data-en="Your past transactions will be listed here soon.">Geçmiş işlemleriniz yakında burada listelenecektir.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) return false; };
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        // YENİ GLOBAL ŞİFRELER
+        const firebaseConfig = {
+            apiKey: "AIzaSyAce3zb1TSXfKhhTfcEF1H-B60rtRI0V98",
+            authDomain: "taranova-depo-global.firebaseapp.com",
+            projectId: "taranova-depo-global",
+            storageBucket: "taranova-depo-global.firebasestorage.app",
+            messagingSenderId: "860879768402",
+            appId: "1:860879768402:web:08c84fe510c83a1b6d488b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userUid = "";
+        let currentCredits = 0;
+
+        // Dil Yönetimi
+        let currentLang = localStorage.getItem('taranova_lang') || 'tr';
+        const applyLang = () => {
+            document.querySelectorAll('[data-tr]').forEach(el => el.innerHTML = el.getAttribute('data-' + currentLang));
+            document.getElementById('langBtn').innerText = currentLang === 'tr' ? 'EN' : 'TR';
+        };
+        applyLang();
+        window.toggleLang = () => { currentLang = currentLang === 'tr' ? 'en' : 'tr'; localStorage.setItem('taranova_lang', currentLang); applyLang(); };
+
+        // Menü Gezintisi
+        window.showView = (v) => {
+            document.querySelectorAll('.view-section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(v + '-view').style.display = 'block';
+            document.getElementById('nav-' + v.substring(0,4)).classList.add('active');
+        };
+
+        // KULLANICI KONTROLÜ (GİRİŞ YAPMAYANI KOV)
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) { window.location.href = "login.html"; return; }
+            userUid = user.uid;
+            
+            // Veritabanından Kullanıcının Kredisini Çek
+            const userDoc = await getDoc(doc(db, "users", userUid));
+            if (userDoc.exists()) {
+                currentCredits = userDoc.data().credits || 0;
+                document.getElementById('creditAmount').innerText = currentCredits;
+                document.getElementById('userGreeting').innerText = currentLang === 'tr' ? `Hoş Geldin, ${userDoc.data().fullName.split(' ')[0]}!` : `Welcome, ${userDoc.data().fullName.split(' ')[0]}!`;
+            } else {
+                document.getElementById('creditAmount').innerText = "0";
+            }
+        });
+
+        // ÇIKIŞ YAP
+        document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+        // SATIN ALMA SİMÜLASYONU (PAYTR/STRIPE GELECEK)
+        window.buyCredits = (amount, price) => {
+            alert(currentLang === 'tr' ? `Ödeme altyapısı (PayTR/Stripe) entegrasyonu bekleniyor. Seçilen paket: ${amount} Tarama` : `Payment gateway integration pending. Selected package: ${amount} Scans`);
+        };
+
+        // DOSYA YÜKLEME VE YAPAY ZEKA SİMÜLASYONU
+        document.getElementById('fileInput').addEventListener('change', async (e) => {
+            if (e.target.files.length === 0) return;
+            const statusMsg = document.getElementById('statusMsg');
+            
+            if (currentCredits <= 0) {
+                statusMsg.innerHTML = `<div class="alert alert-danger fw-bold mt-3"><i class="fa-solid fa-triangle-exclamation me-2"></i> ${currentLang === 'tr' ? 'Krediniz yetersiz! Lütfen cüzdan sekmesinden kredi yükleyin.' : 'Insufficient credits! Please buy credits from the wallet tab.'}</div>`;
+                return;
+            }
+
+            statusMsg.innerHTML = `<div class="alert alert-primary mt-3"><i class="fa-solid fa-robot fa-bounce me-2"></i> ${currentLang === 'tr' ? 'Yapay Zeka İrsaliyeyi Analiz Ediyor...' : 'AI is Analyzing the Waybill...'}</div>`;
+
+            // Gelecekteki Render API URL'si buraya eklenecek
+            // const apiUrl = "https://taranova-depo-motor.onrender.com/api/irsaliye_analiz";
+
+            setTimeout(async () => {
+                try {
+                    // İşlem başarılı sayılırsa krediyi 1 düşür
+                    await updateDoc(doc(db, "users", userUid), { credits: increment(-1) });
+                    currentCredits -= 1;
+                    document.getElementById('creditAmount').innerText = currentCredits;
+
+                    statusMsg.innerHTML = `<div class="alert alert-success fw-bold mt-3"><i class="fa-solid fa-check-circle me-2"></i> ${currentLang === 'tr' ? 'Başarılı! Excel dosyası hazır (Motor bağlandığında indirilecek).' : 'Success! Excel is ready (Will download when backend is connected).'}</div>`;
+                } catch (err) {
+                    statusMsg.innerHTML = `<div class="alert alert-danger fw-bold mt-3">Hata oluştu.</div>`;
+                }
+            }, 2500);
+        });
+    </script>
+</body>
+</html>

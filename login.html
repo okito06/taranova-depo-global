@@ -31,11 +31,11 @@
             <form id="loginForm">
                 <div class="mb-3">
                     <label class="form-label small fw-bold" data-tr="E-posta Adresi" data-en="Email Address">E-posta Adresi</label>
-                    <input type="email" id="email" class="form-control form-control-lg" placeholder="ornek@sirket.com" required>
+                    <input type="email" id="email" class="form-control form-control-lg" required>
                 </div>
                 <div class="mb-2">
                     <label class="form-label small fw-bold" data-tr="Şifre" data-en="Password">Şifre</label>
-                    <input type="password" id="password" class="form-control form-control-lg" placeholder="••••••" required>
+                    <input type="password" id="password" class="form-control form-control-lg" required>
                 </div>
                 
                 <div class="text-end mb-4">
@@ -90,24 +90,23 @@
             errorDiv.classList.add('d-none');
             successDiv.classList.add('d-none');
             
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Kontrol Ediliyor...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Lütfen Bekleyin...';
             btn.disabled = true;
 
             try {
-                // DOĞRULAMA MAİLİ ŞARTINI KALDIRDIK! DİREKT GİRİŞ!
                 await signInWithEmailAndPassword(auth, email, password);
 
-                successDiv.innerText = currentLang === 'tr' ? "Giriş Başarılı! Panale uçuyorsunuz..." : "Login Successful! Redirecting...";
+                successDiv.innerText = currentLang === 'tr' ? "Giriş başarılı. Yönlendiriliyorsunuz..." : "Login successful. Redirecting...";
                 successDiv.classList.remove('d-none');
                 
                 setTimeout(() => { 
                     window.location.href = "https://app.taranovadepo.net"; 
-                }, 1200);
+                }, 1000);
 
             } catch (error) {
                 btn.innerHTML = currentLang === 'tr' ? 'Giriş Yap' : 'Login';
                 btn.disabled = false;
-                errorDiv.innerText = currentLang === 'tr' ? "E-posta veya şifre hatalı!" : "Invalid email or password!";
+                errorDiv.innerText = currentLang === 'tr' ? "E-posta veya şifre hatalı." : "Invalid email or password.";
                 errorDiv.classList.remove('d-none');
             }
         });

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taranova Depo | AI Powered Logistics</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        /* 🚨 FERAH (LIGHT) TEMA RENKLERİ 🚨 */
+        :root {
+            --bg-light: #F8FAFC; 
+            --bg-card: #FFFFFF; 
+            --border-color: #E2E8F0; 
+            --primary: #2563EB; 
+            --accent: #F59E0B; 
+            --text-main: #0F172A; 
+            --text-muted: #475569; 
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Sayfa kilitliyken kaydırmayı engelle */
+        body.locked { overflow: hidden; }
+
+        /* 🚨 TAM EKRAN DİL SEÇİM SAYFASI (SPLASH SCREEN) 🚨 */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #FFFFFF; z-index: 99999;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        .splash-content { text-align: center; max-width: 900px; width: 90%; }
+        .lang-select-btn { 
+            width: 100%; padding: 25px; border-radius: 20px; font-weight: 800; font-size: 1.6rem; 
+            transition: 0.3s; border: 2px solid var(--border-color); background: #F8FAFC; color: var(--text-main); 
+            display: flex; align-items: center; justify-content: center; gap: 20px; cursor: pointer;
+        }
+        .btn-en:hover { background: #EFF6FF; border-color: #2563EB; color: #1D4ED8; transform: translateY(-5px); box-shadow: 0 15px 30px rgba(37,99,235,0.15);}
+        .btn-tr:hover { background: #FEF3C7; border-color: #F59E0B; color: #B45309; transform: translateY(-5px); box-shadow: 0 15px 30px rgba(245,158,11,0.15);}
+
+        /* --- NAVBAR --- */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color); padding: 18px 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .navbar-brand { font-weight: 800; font-size: 1.8rem; color: var(--text-main) !important; letter-spacing: -1px; }
+        .brand-accent { color: var(--primary); }
+        .nav-link { color: var(--text-muted) !important; font-weight: 600; margin: 0 10px; transition: 0.3s; cursor: pointer;}
+        .nav-link:hover { color: var(--primary) !important; }
+        .btn-login { color: var(--text-main); font-weight: 800; text-decoration: none; margin-right: 15px; transition: 0.3s; }
+        .btn-login:hover { color: var(--primary); }
+        .btn-glow {
+            background: linear-gradient(135deg, var(--primary) 0%, #1D4ED8 100%); color: white; font-weight: 800; padding: 10px 25px; border-radius: 50px; border: none;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: all 0.3s; text-decoration: none;
+        }
+        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5); color: white; }
+        .lang-btn { background: var(--bg-light); color: var(--text-main); border: 2px solid var(--border-color); border-radius: 8px; padding: 6px 15px; font-weight: 800; margin-right: 15px; transition: 0.3s; }
+        .lang-btn:hover { background: #E2E8F0; }
+
+        /* --- HERO & DEMO SECTION (BİRLEŞTİRİLDİ) --- */
+        .hero-section { padding: 160px 0 80px; text-align: center; background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%); }
+        .hero-title { font-size: 4rem; font-weight: 800; line-height: 1.15; margin-bottom: 20px; color: var(--text-main); letter-spacing: -1.5px; }
+        .text-gradient { background: linear-gradient(to right, #2563EB, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-subtitle { font-size: 1.25rem; color: var(--text-muted); max-width: 850px; margin: 0 auto 30px; line-height: 1.7; font-weight: 500; }
+
+        /* DEMO (DROPZONE) KUTUSU */
+        .dropzone-box {
+            background: #FFFFFF; border: 2px dashed #94A3B8; border-radius: 30px; padding: 60px 30px; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        }
+        .dropzone-box:hover { border-color: var(--primary); background: #EFF6FF; }
+
+        /* --- VURGU KARTLARI --- */
+        .vurgu-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; padding: 35px; text-align: left; height: 100%; transition: 0.3s; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); }
+        .vurgu-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 20px 40px -10px rgba(37,99,235,0.1); }
+        .vurgu-icon { font-size: 2.8rem; color: var(--primary); margin-bottom: 20px; display: block; }
+        .vurgu-title { font-weight: 800; color: var(--text-main); margin-bottom: 15px; font-size: 1.4rem; }
+        .vurgu-text { color: var(--text-muted); font-size: 1.1rem; line-height: 1.7; }
+
+        /* --- PAKETLER --- */
+        .pricing-section { padding: 80px 0; background-color: #FFFFFF; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
+        .pricing-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 30px; padding: 50px 35px; transition: 0.4s; text-align: center; height: 100%; position: relative; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05); }
+        .pricing-card:hover { border-color: var(--primary); transform: translateY(-10px); box-shadow: 0 20px 50px -10px rgba(37,99,235,0.2); }
+        .pricing-card.popular { border: 2px solid var(--primary); }
+        .popular-badge { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 6px 25px; border-radius: 50px; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; white-space: nowrap; }
+        .price-tag { font-size: 3.5rem; font-weight: 800; color: var(--text-main); margin: 25px 0; letter-spacing: -2px; }
+        .price-currency { font-size: 1.4rem; vertical-align: super; margin-right: 5px; color: var(--text-main); }
+        .price-period { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
+        .feature-list { list-style: none; padding: 0; margin: 35px 0; text-align: left; }
+        .feature-list li { margin-bottom: 18px; color: var(--text-muted); font-size: 1.1rem; display: flex; align-items: center; font-weight: 600; }
+        .feature-list i { color: #10B981; margin-right: 12px; font-size: 1.2rem; }
+        .usd-note { font-size: 0.9rem; color: var(--primary); margin-top: 10px; display: none; font-weight: 700; }
+
+        footer { background: #F8FAFC; padding: 60px 0 30px; border-top: 1px solid var(--border-color); }
+        .footer-logo { font-size: 2rem; font-weight: 800; letter-spacing: -1px; color: var(--text-main); }
+
+        @media (max-width: 768px) { .hero-title { font-size: 2.5rem; } .hero-subtitle { font-size: 1.1rem; } .lang-select-btn { font-size: 1.2rem; padding: 15px;} }
+    </style>
+</head>
+<body class="locked">
+
+    <div id="splash-screen">
+        <div class="splash-content">
+            <i class="fa-solid fa-earth-americas display-1 mb-4 text-primary"></i>
+            <h1 class="fw-bold mb-3" style="font-size: 3.5rem; color: var(--text-main);">Welcome / Hoş Geldiniz</h1>
+            <p class="text-muted mb-5 fs-4">Please choose your language / Lütfen dil seçiminizi yapın</p>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-6">
+                    <button class="lang-select-btn btn-en" onclick="chooseLanguage('en')">
+                        <img src="https://flagcdn.com/w40/us.png" width="40" class="me-2"> English (US/CA)
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button class="lang-select-btn btn-tr" onclick="chooseLanguage('tr')">
+                        <img src="https://flagcdn.com/w40/tr.png" width="40" class="me-2"> Türkçe (TR)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">TARANOVA<span class="brand-accent">DEPO</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav me-3">
+                        <li class="nav-item"><a class="nav-link" href="#neden-biz" data-tr="Neden Biz?" data-en="Why Us?">Neden Biz?</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#paketler" data-tr="Paketler" data-en="Pricing">Paketler</a></li>
+                    </ul>
+                    <div class="d-flex align-items-center mt-3 mt-lg-0">
+                        <button class="lang-btn" onclick="toggleLanguage()" id="langToggleBtn">EN / TR</button>
+                        <a href="login.html" class="btn-login" data-tr="Giriş Yap" data-en="Login">Giriş Yap</a>
+                        <a href="register.html" class="btn btn-glow text-white" data-tr="Kayıt Ol" data-en="Sign Up">Kayıt Ol</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero-section">
+            <div class="container">
+                <h1 class="hero-title">
+                    <span data-tr="İrsaliyeleri Satır Satır İşlemeyin." data-en="Stop Processing Invoices Line by Line.">İrsaliyeleri Satır Satır İşlemeyin.</span> <br>
+                    <span class="text-gradient" data-tr="Taratın, Taranova Sizin Yerinize İşlesin." data-en="Scan Them, Let Taranova Do The Work.">Taratın, Taranova Sizin Yerinize İşlesin.</span>
+                </h1>
+                <p class="hero-subtitle" data-tr="İş yükünden kurtulun! Taranova Depo, evraklarınızı saniyeler içinde okur, Kovan Zihni ile analiz eder ve %100 hatasız olarak Excel'e döker." data-en="Get rid of the workload! Taranova Depo scans your documents in seconds, analyzes them with Hive Mind AI, and exports them to Excel with 100% accuracy.">
+                    İş yükünden kurtulun! Taranova Depo, evraklarınızı saniyeler içinde okur, Kovan Zihni ile analiz eder ve %100 hatasız olarak Excel'e döker.
+                </p>
+                
+                <div class="row justify-content-center mt-5">
+                    <div class="col-lg-8">
+                        <div class="dropzone-box shadow-sm" id="test-alani" onclick="document.getElementById('demoFile').click()">
+                            <i class="fa-solid fa-cloud-arrow-up display-2 mb-4" style="color: var(--primary);"></i>
+                            <h3 class="fw-bold mb-3" style="color: var(--text-main);" data-tr="Sistemi Hemen Test Edin" data-en="Test The System Now">Sistemi Hemen Test Edin</h3>
+                            <p class="text-muted mb-4" data-tr="Bir irsaliye yükleyin ve Taranova'nın hızını gözlerinizle görün." data-en="Upload a delivery note and see the speed of Taranova.">Bir irsaliye yükleyin ve Taranova'nın hızını gözlerinizle görün.</p>
+                            <input type="file" id="demoFile" hidden accept=".pdf, .jpg, .jpeg, .png">
+                            <button class="btn btn-glow px-5 fs-5 text-white" data-tr="Dosya Seç" data-en="Browse File">Dosya Seç</button>
+                        </div>
+                        <div id="demoStatus" class="mt-4"></div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center gap-3 flex-wrap mt-5">
+                    <a href="#paketler" class="btn btn-outline-dark btn-lg px-5 py-3 fs-5 rounded-pill" data-tr="Paketleri Gör" data-en="View Pricing">Paketleri Gör</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="neden-biz" class="py-5">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="vurgu-card">
+                            <i class="fa-solid fa-person-circle-minus vurgu-icon"></i>
+                            <h4 class="vurgu-title" data-tr="Ağır İş Yükünden Kurtulun" data-en="Eliminate Heavy Workloads">Ağır İş Yükünden Kurtulun</h4>
+                            <p class="vurgu-text" data-tr="Haftalarca süren sıkıcı ve yorucu manuel irsaliye girişlerini dakikalara indirin. Yüzlerce satırlık evrakları sisteme yükleyin, arkanıza yaslanın ve hazır Excel dosyanızı indirin." data-en="Reduce tedious manual entry from weeks to minutes. Upload hundreds of document lines, sit back, and download your ready-to-use Excel file.">
+                                Haftalarca süren sıkıcı ve yorucu manuel irsaliye girişlerini dakikalara indirin. Yüzlerce satırlık evrakları sisteme yükleyin, arkanıza yaslanın ve hazır Excel dosyanızı indirin.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="vurgu-card">
+                            <i class="fa-solid fa-shield-halved vurgu-icon" style="color: #10B981;"></i>
+                            <h4 class="vurgu-title" data-tr="Sıfır Hata, Tam Güven" data-en="Zero Errors, Total Trust">Sıfır Hata, Tam Güven</h4>
+                            <p class="vurgu-text" data-tr="Gözden kaçan rakamlar, yanlış girilen birimler tarihe karışıyor. Yapay zekamız birimleri sektörel hafızasıyla eşleştirir, hiçbir satırı yutmadan eksiksiz işlem yapar." data-en="Missed numbers and wrong units are history. Our AI matches units with its industrial memory and processes flawlessly without skipping a single line.">
+                                Gözden kaçan rakamlar, yanlış girilen birimler tarihe karışıyor. Yapay zekamız birimleri sektörel hafızasıyla eşleştirir, hiçbir satırı yutmadan eksiksiz işlem yapar.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="paketler" class="pricing-section">
+            <div class="container">
+                <div class="text-center mb-5 pb-4">
+                    <h2 class="display-5 fw-bold" style="color: var(--text-main);" data-tr="Esnek Lisans Paketleri" data-en="Flexible Subscription Plans">Esnek Lisans Paketleri</h2>
+                    <p class="fs-5 text-muted" data-tr="İhtiyacınıza en uygun paketi seçin." data-en="Choose the plan that fits your business needs.">İhtiyacınıza en uygun paketi seçin.</p>
+                </div>
+                
+                <div class="row g-4 justify-content-center">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="pricing-card">
+                            <h4 class="fw-bold text-primary" data-tr="Standart Plan" data-en="Standard Plan">Standart Plan</h4>
+                            <div class="price-tag"><span class="price-currency" id="cur-std">₺</span><span id="price-std">3.000</span><span class="price-period" data-tr="/ Ay" data-en="/ Month">/ Ay</span></div>
+                            <h2 class="fw-bold mb-4" style="color: var(--text-main);" data-tr="1.500 Tarama" data-en="1,500 Scans">1.500 Tarama</h2>
+                            <ul class="feature-list">
+                                <li><i class="fa-solid fa-check"></i> <span data-tr="30 Günlük Kullanım" data-en="30 Days Access">30 Günlük Kullanım</span></li>
+                                <li><i class="fa-solid fa-check"></i> <span data-tr="VIP Excel İcmal Çıktısı" data-en="VIP Excel Export">VIP Excel İcmal Çıktısı</span></li>
+                                <li style="opacity: 0.6;"><i class="fa-solid fa-xmark text-danger"></i> <span data-tr="Kullanılmayan haklar devretmez" data-en="Unused credits do not roll over">Kullanılmayan haklar devretmez</span></li>
+                            </ul>
+                            <p class="usd-note">*All transactions are processed in USD.</p>
+                            <a href="register.html" class="btn btn-outline-primary w-100 py-3 rounded-pill fw-bold" data-tr="Kayıt Ol ve Satın Al" data-en="Sign Up & Buy">Kayıt Ol ve Satın Al</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="pricing-card popular">
+                            <div class="popular-badge" data-tr="EN ÇOK TERCİH EDİLEN" data-en="MOST POPULAR">EN ÇOK TERCİH EDİLEN</div>
+                            <h4 class="fw-bold text-primary" data-tr="Profesyonel Plan" data-en="Professional Plan">Profesyonel Plan</h4>
+                            <div class="price-tag"><span class="price-currency" id="cur-pro">₺</span><span id="price-pro">5.000</span><span class="price-period" data-tr="/ Ay" data-en="/ Month">/ Ay</span></div>
+                            <h2 class="fw-bold mb-4" style="color: var(--text-main);" data-tr="4.000 Tarama" data-en="4,000 Scans">4.000 Tarama</h2>
+                            <ul class="feature-list">
+                                <li><i class="fa-solid fa-check"></i> <span data-tr="30 Günlük Kullanım" data-en="30 Days Access">30 Günlük Kullanım</span></li>
+                                <li><i class="fa-solid fa-check"></i> <strong data-tr="Sektörel Kovan Zihni" data-en="Industrial Hive Mind AI">Sektörel Kovan Zihni</strong></li>
+                                <li style="opacity: 0.6;"><i class="fa-solid fa-xmark text-danger"></i> <span data-tr="Kullanılmayan haklar devretmez" data-en="Unused credits do not roll over">Kullanılmayan haklar devretmez</span></li>
+                            </ul>
+                            <p class="usd-note">*All transactions are processed in USD.</p>
+                            <a href="register.html" class="btn btn-glow w-100 py-3 fw-bold text-white" data-tr="Kayıt Ol ve Başla" data-en="Sign Up & Start">Kayıt Ol ve Başla</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="pricing-card">
+                            <h4 class="fw-bold" style="color: var(--text-main);" data-tr="Kurumsal Plan" data-en="Corporate Plan">Kurumsal Plan</h4>
+                            <div class="price-tag"><span class="price-currency" id="cur-corp">₺</span><span id="price-corp">10.000</span><span class="price-period" data-tr="/ Ay" data-en="/ Month">/ Ay</span></div>
+                            <h2 class="fw-bold mb-4" style="color: var(--text-main);" data-tr="10.000 Tarama" data-en="10,000 Scans">10.000 Tarama</h2>
+                            <ul class="feature-list">
+                                <li><i class="fa-solid fa-check"></i> <span data-tr="30 Günlük Kullanım" data-en="30 Days Access">30 Günlük Kullanım</span></li>
+                                <li><i class="fa-solid fa-check"></i> <span data-tr="Sınırsız İcmal Tablosu" data-en="Unlimited Excel Exports">Sınırsız İcmal Tablosu</span></li>
+                                <li style="opacity: 0.6;"><i class="fa-solid fa-xmark text-danger"></i> <span data-tr="Kullanılmayan haklar devretmez" data-en="Unused credits do not roll over">Kullanılmayan haklar devretmez</span></li>
+                            </ul>
+                            <p class="usd-note">*All transactions are processed in USD.</p>
+                            <a href="register.html" class="btn btn-outline-dark w-100 py-3 rounded-pill fw-bold" data-tr="Kayıt Ol ve Satın Al" data-en="Sign Up & Buy">Kayıt Ol ve Satın Al</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container text-center">
+                <div class="footer-logo mb-3">TARANOVA<span style="color: var(--primary);">DEPO</span></div>
+                <p class="text-muted mb-4 fs-5" data-tr="İş yükünüzü devralan yapay zeka devrimi." data-en="The AI revolution taking over your workload.">İş yükünüzü devralan yapay zeka devrimi.</p>
+                <div class="small text-muted pt-4">
+                    &copy; 2026 Taranova. <span data-tr="Tüm Hakları Saklıdır." data-en="All Rights Reserved.">Tüm Hakları Saklıdır.</span> <br>
+                    <i class="fa-solid fa-envelope me-1"></i> info@taranovadepo.net
+                </div>
+            </div>
+        </footer>
+    </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentLang = 'tr';
+
+        // Tam ekran Splash Screen (Karşılama Sayfası) Mantığı
+        document.addEventListener("DOMContentLoaded", function() {
+            let splash = document.getElementById('splash-screen');
+            let body = document.body;
+
+            // Daha önce dil seçilmemişse KİLİTLİ kalsın (Splash açık kalsın)
+            if (!localStorage.getItem('taranova_lang')) {
+                body.classList.add('locked');
+            } else {
+                // Seçildiyse Splash'i anında yok et, siteyi göster
+                splash.style.display = 'none';
+                body.classList.remove('locked');
+                currentLang = localStorage.getItem('taranova_lang');
+                applyLanguage(currentLang);
+            }
+        });
+
+        // Butona tıklandığında dili seç ve ekranı kaldır
+        function chooseLanguage(lang) {
+            setLanguage(lang);
+            let splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0'; // Yumuşak geçişle kaybolur
+            setTimeout(() => {
+                splash.style.display = 'none';
+                document.body.classList.remove('locked');
+            }, 500);
+        }
+
+        function setLanguage(lang) {
+            localStorage.setItem('taranova_lang', lang);
+            currentLang = lang;
+            applyLanguage(lang);
+        }
+
+        function toggleLanguage() {
+            let newLang = currentLang === 'tr' ? 'en' : 'tr';
+            setLanguage(newLang);
+        }
+
+        function applyLanguage(lang) {
+            document.querySelectorAll('[data-tr]').forEach(el => {
+                el.innerHTML = el.getAttribute('data-' + lang);
+            });
+
+            if (lang === 'en') {
+                document.getElementById('cur-std').innerText = '$'; document.getElementById('price-std').innerText = '10';
+                document.getElementById('cur-pro').innerText = '$'; document.getElementById('price-pro').innerText = '30';
+                document.getElementById('cur-corp').innerText = '$'; document.getElementById('price-corp').innerText = '50';
+                document.querySelectorAll('.usd-note').forEach(el => el.style.display = 'block');
+                document.getElementById('langToggleBtn').innerHTML = '<i class="fa-solid fa-language me-1"></i> EN (Switch TR)';
+            } else {
+                document.getElementById('cur-std').innerText = '₺'; document.getElementById('price-std').innerText = '3.000';
+                document.getElementById('cur-pro').innerText = '₺'; document.getElementById('price-pro').innerText = '5.000';
+                document.getElementById('cur-corp').innerText = '₺'; document.getElementById('price-corp').innerText = '10.000';
+                document.querySelectorAll('.usd-note').forEach(el => el.style.display = 'none');
+                document.getElementById('langToggleBtn').innerHTML = '<i class="fa-solid fa-language me-1"></i> TR (Switch EN)';
+            }
+        }
+
+        const fileInput = document.getElementById('demoFile');
+        const testAlani = document.getElementById('test-alani');
+
+        fileInput.addEventListener('change', (e) => {
+            if(e.target.files.length > 0) {
+                let txtAnalyzing = currentLang === 'tr' ? 'Taranova İşliyor...' : 'Taranova is Processing...';
+                let txtWait = currentLang === 'tr' ? 'Lütfen arkanıza yaslanın, Excel hazırlanıyor.' : 'Please sit back, Excel is being prepared.';
+                let txtSuccess = currentLang === 'tr' ? 'İşlem Başarılı!' : 'Processing Successful!';
+                let txtSuccessSub = currentLang === 'tr' ? 'Zamanınız size kaldı. Tüm satırlar Excel\'e dizildi.' : 'Your time is yours. All rows compiled to Excel.';
+                let txtLogin = currentLang === 'tr' ? 'Giriş Yap' : 'Login';
+                let txtReg = currentLang === 'tr' ? 'Kayıt Ol' : 'Sign Up';
+
+                testAlani.innerHTML = `
+                    <div class="spinner-border text-primary mb-4" style="width: 3.5rem; height: 3.5rem;"></div>
+                    <h3 class="fw-bold" style="color: var(--text-main);">${txtAnalyzing}</h3>
+                    <p class="text-muted fs-5">${txtWait}</p>
+                `;
+                setTimeout(() => {
+                    testAlani.style.borderColor = "#10B981";
+                    testAlani.style.background = "#F0FDF4";
+                    testAlani.innerHTML = `
+                        <i class="fa-solid fa-file-circle-check display-1 mb-4" style="color: #10B981;"></i>
+                        <h3 class="fw-bold" style="color: var(--text-main);">${txtSuccess}</h3>
+                        <p class="text-muted fs-5">${txtSuccessSub}</p>
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+                            <a href="login.html" class="btn btn-glow fs-5 px-5 text-white">${txtLogin}</a>
+                            <a href="register.html" class="btn btn-outline-dark fs-5 px-5 rounded-pill">${txtReg}</a>
+                        </div>
+                    `;
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

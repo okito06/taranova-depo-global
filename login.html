@@ -50,22 +50,12 @@
                 <a href="register.html" class="fw-bold text-decoration-none" style="color: #2563EB;" data-tr="Hemen Kayıt Ol" data-en="Sign Up Now">Hemen Kayıt Ol</a>
             </p>
         </div>
-        
-        <div class="text-center mt-4 mb-5" style="border-top: 1px solid #e2e8f0; padding-top: 20px;">
-            <p class="text-muted small mb-1"><b>Taranova Bilişim ve Teknoloji A.Ş.</b></p>
-            <p class="text-muted small mb-1"><i class="fa-solid fa-phone"></i> 0536 475 35 80</p>
-            <p class="text-muted small mt-3" style="font-size: 10px;">PAYTR markası PayTR Ödeme ve Elektronik Para Kuruluşu A.Ş.’nin tescilli markasıdır.</p>
-        </div>
     </div>
 
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault()); 
         document.onkeydown = function(e) {
-            if(e.keyCode == 123) return false; 
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; 
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; 
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
-            if(e.ctrlKey && e.keyCode == 'C'.charCodeAt(0)) return false; 
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) return false; 
         }
     </script>
 
@@ -74,7 +64,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
-        // Taranova Depo Global Şifreleri
         const firebaseConfig = {
             apiKey: "AIzaSyAce3zb1TSXfKhhTfcEF1H-B60rtRI0V98",
             authDomain: "taranova-depo-global.firebaseapp.com",
@@ -87,7 +76,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Dil Ayarı (Otomatik)
         let currentLang = localStorage.getItem('taranova_lang') || 'tr';
         document.querySelectorAll('[data-tr]').forEach(el => el.innerHTML = el.getAttribute('data-' + currentLang));
 
@@ -102,29 +90,19 @@
             errorDiv.classList.add('d-none');
             successDiv.classList.add('d-none');
             
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> İşlem Yapılıyor...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Kontrol Ediliyor...';
             btn.disabled = true;
 
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+                // DOĞRULAMA MAİLİ ŞARTINI KALDIRDIK! DİREKT GİRİŞ!
+                await signInWithEmailAndPassword(auth, email, password);
 
-                // E-posta Doğrulaması Kontrolü (Opsiyonel ama profesyonel)
-                if (!user.emailVerified) {
-                    errorDiv.innerText = currentLang === 'tr' ? "Lütfen önce E-posta adresinizi doğrulayın!" : "Please verify your email first!";
-                    errorDiv.classList.remove('d-none');
-                    btn.innerHTML = currentLang === 'tr' ? 'Giriş Yap' : 'Login';
-                    btn.disabled = false;
-                    return;
-                }
-
-                successDiv.innerText = currentLang === 'tr' ? "Giriş Başarılı! Uygulamaya yönlendiriliyorsunuz..." : "Login Successful! Redirecting...";
+                successDiv.innerText = currentLang === 'tr' ? "Giriş Başarılı! Panale uçuyorsunuz..." : "Login Successful! Redirecting...";
                 successDiv.classList.remove('d-none');
                 
-                // ASIL SİHİR BURADA: GİRİŞ YAPAN ADAM APP SUNUCUSUNA (DASHBOARD) FIRLATILIR!
                 setTimeout(() => { 
                     window.location.href = "https://app.taranovadepo.net"; 
-                }, 1500);
+                }, 1200);
 
             } catch (error) {
                 btn.innerHTML = currentLang === 'tr' ? 'Giriş Yap' : 'Login';
